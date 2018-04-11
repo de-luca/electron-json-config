@@ -12,7 +12,7 @@ let readConfig = () => {
     fs.writeFileSync(file, '{}');
   }
   config = JSON.parse(fs.readFileSync(file));
-} 
+}; 
 
 if (electron.remote.app.isReady()) {
   readConfig();
