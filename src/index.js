@@ -7,14 +7,21 @@ const file = (electron.app || electron.remote.app).getPath('userData')+'/config.
 
 let config = {};
 
-
-(electron.app || electron.remote.app).on('ready', () => {
+let readConfig = () => {
   if(!u.exists(file)) {
     fs.writeFileSync(file, '{}');
   }
-
   config = JSON.parse(fs.readFileSync(file));
-});
+}; 
+
+if (electron.remote.app.isReady()) {
+  readConfig();
+}
+else {
+  (electron.app || electron.remote.app).on('ready', () => {
+    readConfig();
+  });
+}
 
 
 exports.file = function() {
