@@ -26,16 +26,45 @@
   },
   "scripts": {
     "lint": "eslint .",
-    "test": "electron-mocha --recursive test && electron-mocha --renderer --recursive test"
+    "test": "electron-mocha --recursive test && electron-mocha --renderer --recursive test",
+    "build": "tsc"
   },
   "license": "BSD-2-Clause",
   "devDependencies": {
+    "@types/chai": "^4.2.12",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^14.11.2",
+    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/parser": "^4.3.0",
     "chai": "^4.2.0",
     "electron": "^10.0.0",
-    "electron-mocha": "^9.0.1",
-    "eslint": "^7.0.0"
+    "electron-mocha": "^9.2.0",
+    "eslint": "^7.0.0",
+    "nyc": "^15.1.0",
+    "source-map-support": "^0.5.19",
+    "ts-node": "^9.0.0",
+    "typescript": "^3.7.0"
   },
   "files": [
     "src/"
-  ]
+  ],
+  "nyc": {
+    "extension": [
+      ".ts"
+    ],
+    "include": [
+      "src/**/*.js",
+      "src/**/*.ts"
+    ],
+    "exclude": [
+      "src/**/*.spec.*"
+    ],
+    "require": [
+      "ts-node/register"
+    ],
+    "sourceMap": true,
+    "instrument": true,
+    "check-coverage": false,
+    "cache": true
+  }
 }

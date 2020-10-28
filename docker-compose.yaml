@@ -1,0 +1,11 @@
+version: '2.2'
+
+services:
+
+  npm:
+    image: node:stretch
+    init: true
+    volumes:
+      - ./:/scripts:rw
+    working_dir: /scripts
+    entrypoint: ["npm"]
