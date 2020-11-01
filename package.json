@@ -26,7 +26,8 @@
   },
   "scripts": {
     "lint": "eslint src/*.ts",
-    "test": "electron-mocha --recursive test && electron-mocha --renderer --recursive test",
+    "test": "electron-mocha -r ts-node/register '**/*.spec.ts' && electron-mocha --renderer -r ts-node/register '**/*.spec.ts'",
+    "test:coverage": "nyc npm run test",
     "build": "tsc"
   },
   "license": "BSD-2-Clause",

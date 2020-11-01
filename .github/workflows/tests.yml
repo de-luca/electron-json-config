@@ -14,101 +14,69 @@ jobs:
     name: Lint code
     runs-on: [ubuntu-latest]
     steps:
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
-          node-version: 10.x
-      - name: Checkout code
-        uses: actions/checkout@v1
-      - name: Get npm cache
-        uses: actions/cache@v1
+          node-version: 14
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install npm deps
-        run: npm install
-      - name: Run lint
-        run: npm run lint
+      - run: npm install
+      - run: npm run lint
 
   test-ubuntu:
-    name: Test on ${{ matrix.os }} and node ${{ matrix.node_version }} 
-    runs-on: ${{ matrix.os }}
+    name: Ubuntu test
     needs: lint
-    strategy:
-      matrix:
-        node_version: ['8', '10', '12']
-        os: [ubuntu-latest]
+    runs-on: [ubuntu-latest]
     steps:
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node_version }}
-      - name: Checkout code
-        uses: actions/checkout@v1
-      - name: Get npm cache
-        uses: actions/cache@v1
+          node-version: 14
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install npm deps
-        run: npm install
-      - name: Run tests
-        run: xvfb-run --server-args="-screen 0 1024x768x24" npm run test
+      - run: npm install
+      - run: xvfb-run --server-args="-screen 0 1024x768x24" npm run test:coverage
         
-  test-macOS:
-    name: Test on ${{ matrix.os }} and node ${{ matrix.node_version }} 
-    runs-on: ${{ matrix.os }}
+  test-macos:
+    name: macOS test
     needs: lint
-    strategy:
-      matrix:
-        node_version: ['8', '10', '12']
-        os: [macOS-latest]
+    runs-on: [macOS-latest]
     steps:
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node_version }}
-      - name: Checkout code
-        uses: actions/checkout@v1
-      - name: Get npm cache
-        uses: actions/cache@v1
+          node-version: 14
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install npm deps
-        run: npm install
-      - name: Run tests
-        run: npm run test
+      - run: npm install
+      - run: npm run test
 
   test-windows:
-    name: Test on ${{ matrix.os }} and node ${{ matrix.node_version }} 
-    runs-on: ${{ matrix.os }}
+    name: Windows test
     needs: lint
-    strategy:
-      matrix:
-        node_version: ['8', '10', '12']
-        os: [windows-latest]
+    runs-on: [windows-latest]
     steps:
-      - name: Use Node.js ${{ matrix.node_version }}
-        uses: actions/setup-node@v1
+      - uses: actions/setup-node@v1
         with:
-          node-version: ${{ matrix.node_version }}
-      - name: Checkout code
-        uses: actions/checkout@v1
-      - name: Get npm cache
-        uses: actions/cache@v1
+          node-version: 14
+      - uses: actions/checkout@v2
+      - uses: actions/cache@v2
         with:
-          path: ~\AppData\Roaming\npm-cache
-          key: ${{ runner.os }}-node-${{ hashFiles('**\package-lock.json') }}
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
-      - name: Install npm deps
-        run: npm install
-      - name: Run tests
-        run: npm run test
+      - run: npm install
+      - run: npm run test
