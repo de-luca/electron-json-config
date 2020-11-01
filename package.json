@@ -25,7 +25,7 @@
     "url": "https://github.com/de-luca/electron-json-config.git"
   },
   "scripts": {
-    "lint": "eslint .",
+    "lint": "eslint src/*.ts",
     "test": "electron-mocha --recursive test && electron-mocha --renderer --recursive test",
     "build": "tsc"
   },

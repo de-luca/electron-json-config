@@ -9,6 +9,7 @@ function sync(
 ): PropertyDescriptor {
     const originalMethod = descriptor.value;
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor.value = function (this: any, ...args: Array<any>): any {
         const res = originalMethod.apply(this, args);
         util.sync(this._file, this._data);
@@ -40,27 +41,27 @@ export default class Config {
         return this._file;
     }
 
-    public has(key: Key) {
+    public has(key: Key): boolean {
         return util.search(this._data, key) !== undefined;
     }
 
     @sync
-    public set(key: Key, value: Storable | any): void {
+    public set<T>(key: Key, value: Storable | T): void {
         util.set(this._data, key, value);
     }
 
     @sync
-    public setBulk(items: { [key: string]: Storable | any }) {
+    public setBulk<T>(items: { [key: string]: Storable | T }): void {
         for (const key in items) {
             util.set(this._data, key, items[key]);
         }
     }
 
-    public get<T>(key: Key, defaultValue?: T | any): T | undefined {
+    public get<T>(key: Key, defaultValue?: T): T | undefined {
         const value = util.search(this._data, key);
 
-        return value === undefined ? defaultValue : value;
-    };
+        return value === undefined ? defaultValue : value as T;
+    }
 
     public keys(key?: Key): Array<string> {
         return Object.keys(
@@ -68,24 +69,24 @@ export default class Config {
         );
     }
 
-    public all() {
+    public all(): Storable {
         return this._data;
     }
 
     @sync
-    public delete(key: Key) {
+    public delete(key: Key): void {
         util.remove(this._data, key);
     }
 
     @sync
-    public deleteBulk(keys: Array<Key>) {
+    public deleteBulk(keys: Array<Key>): void {
         for (const key of keys) {
             util.remove(this._data, key);
         }
     }
 
     @sync
-    public purge() {
+    public purge(): void {
         this._data = {};
     }
 }

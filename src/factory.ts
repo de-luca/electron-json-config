@@ -17,7 +17,7 @@ export function factory(file?: string, key?: string): Conf {
 
         instances.set(
             actualKey,
-            new Conf(actualFile, read(actualFile))
+            new Conf(actualFile, read(actualFile)),
         );
     }
     

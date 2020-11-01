@@ -16,7 +16,7 @@ export function exists(file: string): boolean {
   return true;
 }
 
-export function sync(file: string, data: object): void {
+export function sync(file: string, data: Record<string, unknown>): void {
   writeFileSync(file, JSON.stringify(data));
 }
 
@@ -52,10 +52,10 @@ export function search<T>(data: Storable, key: Key): T | undefined {
   return data as T;
 }
 
-export function set(
+export function set<T>(
   data: Storable, 
   key: Key, 
-  value: Storable | any,
+  value: Storable | T,
 ): void {
   const path = pathiffy(key);
   let i;
