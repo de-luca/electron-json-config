@@ -4,190 +4,214 @@
 
 > Simply set and get configuration from a json file for your Electron app
 
-The config file (`config.json`) is located in the path returned by `app.getPath('userData')`.
-This package can be used from **browser and renderer** process.
+**This is the 2.x.x tree. For 1.x.x code and documentation please refer to [the 1.x.x tree](https://github.com/de-luca/electron-json-config/tree/1.x.x).**
+
+This package can be used from **[main and renderer process](https://www.electronjs.org/docs/tutorial/quick-start#main-and-renderer-processes)**.
+
+
+## Installation
+
+### NPM
+```
+npm install --save electron-json-config
+```
+
+### yarn
+```
+yarn add electron-json-config
+```
+
 
 ## Usage
 
+#### `require` syntax
 ```js
-const config = require('electron-json-config');
+const config = require('electron-json-config').factory();
 
 config.set('foo', 'bar');
-console.log(config.get('foo')); // shows 'bar'
+console.log(config.get('foo')); // bar
+```
+
+#### `import` ES6/TS syntax
+```js
+import { factory } from 'electron-json-config';
+
+const config = factory();
+
+config.set('foo', 'bar');
+console.log(config.get('foo')); // bar
 ```
 
 
 ## Documentation
 
-*All `key` can be a classic key (eg: `foo`) or a multiple level key with levels separated by `.` (eg: `foo.bar`)*
+### Key
+
+```ts
+type Key = string | Array<string>;
+```
+A `key` can be :
+- a classic string key  
+  eg: `'foo'`
+- a dotted string multi level key  
+  eg: `'foo.bar'`
+- an array of string representing a multi level key  
+  eg: `['foo', 'bar']`
 
 
-### `.file()`
-Returns the name of the file the config is stored in.  
-**Returns:** [String]
+### Storable
 
-
-### `.set(key, value)`
-Sets a key with the specified value. Overwrites the value, if the key already exists..
-
-| Parameters | Type     | Optional | Description                         |
-|:----------:|:--------:|:--------:|:-----------------------------------:|
-| key        | [String] |          | The key to set                      |
-| value      | *        |          | The value to set under the key      |
-
-**Returns:** void  
-**Example:**
-```js
-config.set('foo', 'bar'); // Sets 'bar' under 'foo' key
-config.set('anArray', [1, 2]); // Sets [1, 2] under 'anArray' key
-config.set('the.answer', 42); // Sets 42 under 'answer' under 'the'
+```ts
+interface Storable {
+  [key: string]: Storable | any;
+}
 ```
 
 
-### `.setBulk(items)`
-Like `.set()` but sets multiple keys in a single call.
+### `factory(file?: string, key?: string): Conf`
 
-| Parameters | Type     | Optional | Description                                 |
-|:----------:|:--------:|:--------:|:-------------------------------------------:|
-| items      | [Object] |          | An object whose attributes will become keys |
+**Description:**  
+Create an instance of [Config] and returns it.  
+If an instance with the same key exist, returns this instance instead.  
 
-**Returns:** void  
-**Example:**
-```js
-// Sets 'bar' under 'foo' key
-// Sets 42 under 'answer' under 'the'
-config.setBulk({
-  'foo': 'bar',
-  'the.answer': 42,
-});
+If file is specified, the configuration will be saved to that file instead of the default `app.getPath('userData') + '/config.json'`.
+
+If key is specified, the requested instance will be saved under une given key instead of the default `userData`.
+
+**Examples:**
+```ts
+// file: app.getPath('userData') + '/config.json'
+// key: 'userData'
+factory();
+
+// file: '/data/test.json'
+// key: '/data/test.json'
+factory('/data/test.json');
+
+// file: '/data/test.json'
+// key: 'test'
+factory('/data/test.json', 'test');
+
+// file: app.getPath('userData') + '/config.json'
+// key: 'test'
+factory(undefined, 'test');
 ```
 
+**Parameters:**
+| Name    | Type     | Default                                    |
+| ------- | -------- | ------------------------------------------ |
+| `file?` | [string] | `app.getPath('userData') + '/config.json'` |
+| `key?`  | [string] | `key || file || 'userData'`                |
 
-### `.has(key)`
-Checks if a key exists.
-
-| Parameters | Type     | Optional | Description                         |
-|:----------:|:--------:|:--------:|:-----------------------------------:|
-| key        | [String] |          | The name of a key to test existence |
-
-**Returns:** [Boolean]  
-**Example:**
-```js
-config.set('foo', 'bar');
-
-config.has('foo'); // true
-config.has('bar'); // false
-```
+**Returns:** void
 
 
-### `.get(key[, defaultValue])`
-Returns the value associated with the key, `undefined` otherwise.  
+### Config
+
+The config class is a set of wrappers and helpers providing access to configuration and file synchronization.
+
+#### `new Config(file: string, data: Storable): Config`
+**Parameters:**
+| Name   | Type       |
+| ------ | ---------- |
+| `file` | [string]   |
+| `data` | [Storable] |
+
+**Returns:** [Config]
+
+#### `get file(): string`
+**Description:** Returns the name of the file the config is stored in.
+
+**Returns:** [string]
+
+#### `all(): Storable`
+**Description:** Returns all the data currently saved.
+
+**Returns:** [Storable]
+
+#### `delete(key: Key): void`
+**Description:** Removes the key and its value from the config file.
+
+**Parameters:**
+| Name  | Type  |
+| ----- | ----- |
+| `key` | [Key] |
+
+**Returns:** void
+
+#### `deleteBulk(keys: Array<Key>): void`
+**Description:** Removes all the keys specified and theirs value from the config file.
+
+**Parameters:**
+| Name   | Type            |
+| ------ | --------------- |
+| `keys` | [Array]\<[Key]> |
+
+**Returns:** void
+
+#### `get<T>(key: Key, defaultValue?: T): T | undefined`
+**Description:** Returns the value associated with the key, undefined otherwise.
 You can specify a default value returned in case the key does not exists.
 
-| Parameters   | Type     | Optional | Description                                       |
-|:------------:|:--------:|:--------:|:-------------------------------------------------:|
-| key          | [String] |          | The name of the key to get                        |
-| defaultValue | *        | ✓        | The value to return in case value does not exists |
+**Parameters:**
+| Name            | Type  |
+| --------------- | ----- |
+| `key`           | [Key] |
+| `defaultValue?` | T     |
 
-**Returns:** \*  
-**Example:**
-```js
-config.set('foo', 'bar'); // Sets 'bar' under 'foo' key
+**Returns:** T \| undefined
 
-config.get('foo');        // Returns 'bar'
-config.get('bar', 42);    // Returns 42
-```
+#### `has(key: Key): boolean`
+**Description:** Checks if a key exists.
 
+**Parameters:**
+| Name  | Type  |
+| ----- | ----- |
+| `key` | [Key] |
 
-### `.keys([key])`
-If `key` is omitted, returns an array containing all keys in the config file.  
-If `key` is provided, returns an array containing all sub keys in the `key` object.
+**Returns:** [boolean]
 
-| Parameters | Type     | Optional | Description                       |
-|:----------:|:--------:|:--------:|:---------------------------------:|
-| key        | [String] | ✓        | The name of a key to get sub keys |
+#### `keys(key?: Key): Array<string>`
+**Description:** If `key` is omitted, returns an array containing all keys in the config file.  
+If `key` is provided, returns an array containing all sub keys in the key object.
 
-**Returns:** [Array]<[String]>  
-**Example:**
-```js
-config.setBulk({
-  'foo': 'bar',
-  'the.answer': 42,
-});
+**Parameters:**
+| Name   | Type  |
+| ------ | ----- |
+| `key?` | [Key] |
 
-config.keys();      // Returns ['foo', 'the']
-config.keys('the'); // Returns ['answer']
-```
+**Returns:** [Array]\<[string]>
 
-### `.all()`
-Returns an object with all the data currently saved.
+#### `purge(): void`
+**Description:** Removes all data from the config file.
 
-**Returns:** [Object]  
-**Example:**
-```js
-config.setBulk({
-  'foo': 'bar',
-  'the.answer': 42,
-});
+**Returns:** void
 
-config.all();
-/*
-{
-  'foo': 'bar',
-  'the': {
-    'answer': 42
-  }
-}
-*/
-```
+#### `set<T>(key: Key, `value`: Storable | T): void`
+**Description:** Sets a key with the specified value. Overwrites the value, if the key already exists.
+
+**Parameters:**
+| Name    | Type            |
+| ------- | --------------- |
+| `key`   | [Key]           |
+| `value` | [Storable] \| T |
+
+**Returns:** void
+
+#### `setBulk<T>(items: { [key:string]: Storable | T }): void`
+**Description:** Like .set() but sets multiple keys in a single call.
+
+**Parameters:**
+| Name    | Type                                 |
+| ------- | ------------------------------------ |
+| `items` | { [key: [string]]: [Storable] \| T } |
+
+**Returns:** void
 
 
-### `.delete(key)`
-Removes the key and its value from the config file.
-
-| Parameters | Type     | Optional | Description                 |
-|:----------:|:--------:|:--------:|:---------------------------:|
-| key        | [String] |          | The name of a key to delete |
-
-**Returns:** void  
-**Example:**
-```js
-config.set('foo', 'bar'); // Sets 'bar' under 'foo' key
-config.delete('foo');     // Removes key 'bar' and its value
-```
-
-
-### `.deleteBulk(keys)`
-Removes all the keys specified and theirs value from the config file.
-
-| Parameters | Type              | Optional | Description                |
-|:----------:|:-----------------:|:--------:|:--------------------------:|
-| keys       | [Array]<[String]> |          | An array of keys to remove |
-
-**Returns:** void  
-**Example:**
-```js
-config.setBulk({
-  'foo': 'bar',
-  'the.answer': 42,
-});
-
-// Remove keys 'foo' and 'answer'
-config.deleteBulk(['foo', 'answer']);
-```
-
-
-### `.purge()`
-Removes all data from the config file.
-
-**Returns:** void  
-**Example:**
-```js
-config.purge(); // All keys are removed
-```
-
-
-[String]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
-[Boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
+[Key]: #key
+[Storable]: #storable
+[Config]: #config
+[string]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
+[boolean]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean
 [Array]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array
-[Object]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
