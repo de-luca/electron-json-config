@@ -44,6 +44,7 @@ jobs:
             ${{ runner.os }}-node-
       - run: npm install
       - run: xvfb-run --server-args="-screen 0 1024x768x24" npm run test:coverage
+      - uses: codecov/codecov-action@v1
         
   test-macos:
     name: macOS test

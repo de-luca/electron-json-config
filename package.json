@@ -32,6 +32,7 @@
   },
   "license": "BSD-2-Clause",
   "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/chai": "^4.2.12",
     "@types/mocha": "^8.0.3",
     "@types/node": "^14.11.2",
@@ -63,6 +64,11 @@
     "require": [
       "ts-node/register"
     ],
+    "reporter": [
+      "lcovonly"
+    ],
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "all": true,
     "sourceMap": true,
     "instrument": true,
     "check-coverage": false,
