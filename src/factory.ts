@@ -3,8 +3,9 @@ import { join } from 'path';
 import { read } from './utils';
 import Conf from './Config';
 
-const defaultKey = 'userData';
+/* istanbul ignore next */
 const defaultFile = join((app || remote.app).getPath('userData'), 'config.json');
+const defaultKey = 'userData';
 
 const instances: Map<string, Conf> = new Map();
 
