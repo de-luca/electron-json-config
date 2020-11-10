@@ -1,7 +1,13 @@
 import { expect } from 'chai';
 import { join } from 'path';
 import { app, remote } from 'electron';
-import { unlinkSync, readFileSync, writeFileSync } from 'fs';
+import {
+    mkdirSync,
+    rmdirSync,
+    unlinkSync,
+    readFileSync,
+    writeFileSync,
+} from 'fs';
 import * as utils from './utils';
 import Storable from './Storable';
 
@@ -16,23 +22,12 @@ function unlinkTmpFiles() {
     try {
         unlinkSync(join(tmpDir, 'iDONTexist'));
     } catch (e) {}
+
+    try {
+        rmdirSync(join(tmpDir, 'IamAdir'));
+    } catch (e) {}
 }
 
-
-describe('utils.exists', () => {
-    afterEach(unlinkTmpFiles);
-
-    it('returns true if file exists', () => {
-        const path = join(tmpDir, 'iexist');
-        writeFileSync(path, '');
-        expect(utils.exists(path)).to.be.true;
-    });
-
-    it('returns false if file does not exists', () => {
-        const path = join(tmpDir, 'iDONTexist');
-        expect(utils.exists(path)).to.be.false;
-    });
-});
 
 describe('utils.sync', () => {
     it('updates the file with given object', () => {
@@ -55,7 +50,6 @@ describe('utils.read', () => {
     it('returns an empty object if file does not exists', () => {
         const path = join(tmpDir, 'iDONTexist');
         expect(utils.read(path)).to.deep.equals({});
-        expect(utils.exists(path)).to.be.true;
     });
 
     it('returns an the stored object if file exists', () => {
@@ -65,6 +59,12 @@ describe('utils.read', () => {
         writeFileSync(path, JSON.stringify(data));
 
         expect(utils.read(path)).to.deep.equals(data);
+    });
+
+    it('throws if another error happen', () => {
+        const path = join(tmpDir, 'IamAdir');
+        mkdirSync(path);
+        expect(() => { utils.read(path) }).to.throw(Error);
     });
 });
 
@@ -129,5 +129,32 @@ describe('utils.remove', () => {
 
         utils.remove(data, 'deep.nested');
         expect(data.deep.nested).to.be.undefined;
+    });
+
+    it('does nothing on an absent value', () => {
+        const data: Storable = {
+            first: 'level',
+            deep: { nested: 'value' },
+        };
+
+        utils.remove(data, 'not.Existing');
+        expect(data).to.deep.equal(data);
+    });
+});
+
+describe('utils.pathiffy', () => {
+    it('returns the same array if key is already an array', () => {
+        const key = ['foo', 'bar'];
+        expect(utils.pathiffy(key)).to.deep.equal(key);
+    });
+
+    it('returns an array if key is a dotted string', () => {
+        const key = 'foo.bar';
+        expect(utils.pathiffy(key)).to.deep.equal(['foo', 'bar']);
+    });
+
+    it('returns an array with a single entry if key is a simple string', () => {
+        const key = 'foo';
+        expect(utils.pathiffy(key)).to.deep.equal(['foo']);
     });
 });

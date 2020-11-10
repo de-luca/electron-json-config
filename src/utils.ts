@@ -1,33 +1,24 @@
-import { statSync, readFileSync, writeFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { Buffer } from 'buffer';
 import Storable from "./Storable";
 import { Key } from './Config';
-
-
-export function exists(file: string): boolean {
-  try {
-    statSync(file);
-  } catch (err) {
-    if (err.code === 'ENOENT') {
-      return false;
-    }
-  }
-
-  return true;
-}
 
 export function sync(file: string, data: Record<string, unknown>): void {
   writeFileSync(file, JSON.stringify(data));
 }
 
 export function read(file: string): Storable {
-  if (!exists(file)) {
-    writeFileSync(file, '{}');
-    
-    return {};
-  } else {
-    const data: Buffer | string = readFileSync(file);
-    return JSON.parse(Buffer.isBuffer(data) ? data.toString() : data);
+  try {
+    // If no encoding is specified, then the raw buffer is returned.
+    // See: https://nodejs.org/api/fs.html#fs_fs_readfile_path_options_callback
+    const data = readFileSync(file) as Buffer;
+    return JSON.parse(data.toString());
+  } catch(err) {
+    if (err.code === 'ENOENT') {
+      writeFileSync(file, '{}');
+      return {};
+    }
+    throw err;
   }
 }
 
@@ -66,7 +57,6 @@ export function set<T>(
     }
     data = data[path[i]];
   }
-
   
   data[path[i]] = value;
 }
@@ -77,7 +67,7 @@ export function remove(data: Storable, key: Key): void {
 
   for (i = 0; i < path.length - 1; ++i) {
     if (!data[path[i]]) {
-      data[path[i]] = {};
+      return;
     }
     data = data[path[i]];
   }

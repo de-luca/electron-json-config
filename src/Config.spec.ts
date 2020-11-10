@@ -113,6 +113,10 @@ describe('Config.keys', () => {
     it('returns nested level keys', () => {
         expect(config.keys('deep')).to.deep.equals(['nested']);
     });
+
+    it('returns an empty level keys', () => {
+        expect(config.keys('notExisting')).to.deep.equals([]);
+    });
 });
 
 describe('Config.all', () => {
