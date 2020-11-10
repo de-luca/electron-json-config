@@ -1,5 +1,8 @@
 # electron-json-config
 
+![David](https://img.shields.io/david/de-luca/electron-json-config)
+![npm](https://img.shields.io/npm/v/electron-json-config)
+[![codecov](https://codecov.io/gh/de-luca/electron-json-config/branch/master/graph/badge.svg)](https://codecov.io/gh/de-luca/electron-json-config)
 ![](https://github.com/de-luca/electron-json-config/workflows/CI/badge.svg)
 
 > Simply set and get configuration from a json file for your Electron app
