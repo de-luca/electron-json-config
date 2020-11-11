@@ -36,7 +36,7 @@ console.log(config.get('foo')); // bar
 ```
 
 #### `import` ES6/TS syntax
-```js
+```ts
 import { factory } from 'electron-json-config';
 
 const config = factory();
