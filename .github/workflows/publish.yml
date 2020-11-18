@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     tags:
-      - '*.*.*'
+      - '*'
 
 jobs:
 
@@ -26,4 +26,8 @@ jobs:
       - run: echo "//registry.npmjs.org/:_authToken=$NODE_AUTH_TOKEN" >> ~/.npmrc
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - run: npm publish --access public
+      - if: contains(github.ref, '-beta')
+        run: npm publish --access public --tag beta
+      - if: "!contains(github.ref, '-beta')"
+        run: npm publish --access public
+
