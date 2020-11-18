@@ -12,11 +12,12 @@ const config = require('electron-json-config');
 
 `factory()` is now responsible of the instanciation.
 
-`require` syntax
+CommonJS
 ```js
 const config = require('electron-json-config').factory();
 ```
-`import` ES6/TS syntax
+
+ES Modules
 ```ts
 import { factory } from 'electron-json-config';
 
@@ -40,11 +41,12 @@ const config = require('electron-json-config');
 
 Returns the default configuration from the default file
 
-`require` syntax
+CommonJS
 ```js
 const config = require('electron-json-config').factory();
 ```
-`import` ES6/TS syntax
+
+ES Modules
 ```ts
 import { factory } from 'electron-json-config';
 
@@ -59,7 +61,7 @@ const config = factory();
 
 **`2.x.x`**:
 
-`require` syntax
+CommonJS
 ```js
 const factory = require('electron-json-config').factory;
 
@@ -67,7 +69,7 @@ const defaultConf = factory();
 const testConf = factory('/data/test.json');
 ```
 
-`import` ES6/TS syntax
+ES Modules
 ```ts
 import { factory } from 'electron-json-config';
 
