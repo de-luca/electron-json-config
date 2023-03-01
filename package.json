@@ -39,7 +39,7 @@
     "@typescript-eslint/eslint-plugin": "^5.7.0",
     "@typescript-eslint/parser": "^5.7.0",
     "chai": "^4.2.0",
-    "electron": "^22.0.0",
+    "electron": "^23.1.1",
     "electron-mocha": "^11.0.2",
     "eslint": "^8.4.1",
     "nyc": "^15.1.0",
