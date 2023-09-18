@@ -4,7 +4,7 @@ import Storable from "./Storable";
 import { Key } from './Config';
 
 export function sync(file: string, data: Record<string, unknown>): void {
-  writeFileSync(file, JSON.stringify(data));
+  writeFileSync(file, JSON.stringify(data, null, 2));
 }
 
 export function read(file: string): Storable {
