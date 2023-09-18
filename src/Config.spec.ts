@@ -44,7 +44,7 @@ describe('Config.set', () => {
     it('syncs the file on call', () => {
         config.set('isSynced', 'sure');
         const content = readFileSync(tmpFile).toString();
-        expect(content).to.equals(JSON.stringify((config as any)._data));
+        expect(content).to.equals(JSON.stringify((config as any)._data, null, 2));
     });
 });
 
@@ -63,7 +63,7 @@ describe('Config.setBulk', () => {
     it('syncs the file on call', () => {
         config.set('isSynced', 'sure');
         const content = readFileSync(tmpFile).toString();
-        expect(content).to.equals(JSON.stringify((config as any)._data));
+        expect(content).to.equals(JSON.stringify((config as any)._data, null, 2));
     });
 });
 

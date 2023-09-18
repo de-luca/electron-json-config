@@ -38,7 +38,7 @@ describe('utils.sync', () => {
         utils.sync(path, data);
 
         const content = readFileSync(path).toString();
-        expect(content).to.equals(JSON.stringify(data));
+        expect(content).to.equals(JSON.stringify(data, null, 2));
     });
 });
 
