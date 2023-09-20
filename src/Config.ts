@@ -12,7 +12,7 @@ function sync(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor.value = function (this: any, ...args: Array<any>): any {
         const res = originalMethod.apply(this, args);
-        util.sync(this._file, this._data, this._options);
+        util.sync(this._file, this._data, this._options.prettyJson);
 
         return res;
     };
@@ -21,18 +21,22 @@ function sync(
 }
 
 /**
+ * Type to support configuration of pretty JSON when writing JSON file
+ */
+export type PrettyJSONConfig = {
+  enabled: boolean;
+  indentSize?: number;
+};
+
+/**
  * Options that can be passed to Config for writing and storing data
  * 
  * Currently supports pretty JSON format for storing indented, 
  * multi-line in file
  */
 export type ConfigOptions = {
-    prettyJson?: {
-        enabled: boolean;
-        indentSize?: number;
-    };
+   prettyJson?: PrettyJSONConfig;
 };
-
 /**
  * Default config, used for optional `options` args throughout
  */
