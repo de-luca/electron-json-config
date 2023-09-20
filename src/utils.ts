@@ -1,18 +1,15 @@
 import { readFileSync, writeFileSync } from 'fs';
 import { Buffer } from 'buffer';
 import Storable from "./Storable";
-import { ConfigOptions, DEFAULT_CONFIG, Key } from './Config';
+import { DEFAULT_CONFIG, Key, PrettyJSONConfig } from './Config';
 
 export function sync(
   file: string,
   data: Record<string, unknown>,
-  options: ConfigOptions = DEFAULT_CONFIG,
+  options: PrettyJSONConfig = DEFAULT_CONFIG['prettyJson'],
 ): void {
-  if (options.prettyJson && options.prettyJson.enabled) {
-    writeFileSync(
-      file,
-      JSON.stringify(data, null, options.prettyJson.indentSize || 2),
-    );
+  if (options?.enabled) {
+    writeFileSync(file, JSON.stringify(data, null, options.indentSize || 2));
   } else {
     writeFileSync(file, JSON.stringify(data));
   }

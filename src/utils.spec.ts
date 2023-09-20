@@ -51,7 +51,7 @@ describe('utils.sync', () => {
     
         const defaultIndent = 2;
     
-        utils.sync(path, data, { prettyJson: { enabled: true } });
+        utils.sync(path, data, { enabled: true });
     
         const content = readFileSync(path).toString();
         expect(content).to.equals(JSON.stringify(data, null, defaultIndent));
@@ -66,9 +66,7 @@ describe('utils.sync', () => {
     
         const indent = 4;
     
-        utils.sync(path, data, {
-          prettyJson: { enabled: true, indentSize: indent },
-        });
+        utils.sync(path, data, { enabled: true, indentSize: indent });
     
         const content = readFileSync(path).toString();
         expect(content).to.equals(JSON.stringify(data, null, indent));
