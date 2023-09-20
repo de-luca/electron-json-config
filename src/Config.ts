@@ -12,13 +12,26 @@ function sync(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor.value = function (this: any, ...args: Array<any>): any {
         const res = originalMethod.apply(this, args);
-        util.sync(this._file, this._data);
+        util.sync(this._file, this._data, this._options);
 
         return res;
     };
 
     return descriptor;
 }
+
+export type ConfigOptions = {
+    prettyJson?: {
+        enabled: boolean;
+        indentSize?: number;
+    };
+};
+
+export const DEFAULT_CONFIG = { 
+    prettyJson: {
+        enabled: false,
+    },
+};
 
 /**
  * A Key can be:
@@ -31,10 +44,16 @@ export type Key = string | Array<string>;
 export default class Config {
     private _file: string;
     private _data: Storable;
+    private _options: ConfigOptions;
 
-    public constructor(file: string, data: Storable) {
+    public constructor(
+        file: string, 
+        data: Storable, 
+        options: ConfigOptions = DEFAULT_CONFIG,
+    ) {
         this._file = file;
         this._data = data;
+        this._options = options;
     }
 
     public get file(): string {
