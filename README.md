@@ -62,6 +62,23 @@ A `key` can be :
 - an array of string representing a multi level key  
   eg: `['foo', 'bar']`
 
+### ConfigOptions
+
+```ts
+type ConfigOptions = {
+  prettyJson?: {
+    enabled: boolean;
+    indentSize?: number;
+  };
+};
+```
+
+Options for creating and storing Config contents.
+Currently supports formatting the JSON file contents in a pretty, indented 
+format for easy readability or editability.
+
+`prettyJson.identSize` defaults to `2` if this option is `enabled`.
+
 
 ### Storable
 
@@ -72,7 +89,7 @@ interface Storable {
 ```
 
 
-### `factory(file?: string, key?: string): Conf`
+### `factory(file?: string, key?: string, options?: ConfigOptions): Conf`
 
 **Description:**  
 Create an instance of [Config] and returns it.  
@@ -99,13 +116,19 @@ factory('/data/test.json', 'test');
 // file: app.getPath('userData') + '/config.json'
 // key: 'test'
 factory(undefined, 'test');
+
+// file: app.getPath('userData') + '/config.json'
+// key: 'test'
+// JSON stored in readable, indented format (with default 2 space tab)
+factory(undefined, 'test', { prettyJson: { enabled: true }});
 ```
 
 **Parameters:**
-| Name    | Type     | Default                                    |
-| ------- | -------- | ------------------------------------------ |
-| `file?` | [string] | `app.getPath('userData') + '/config.json'` |
-| `key?`  | [string] | `key || file || 'userData'`                |
+| Name       | Type            | Default                                    |
+| ---------- | --------------- | ------------------------------------------ |
+| `file?`    | [string]        | `app.getPath('userData') + '/config.json'` |
+| `key?`     | [string]        | `key || file || 'userData'`                |
+| `options?` | [ConfigOptions] | `{ prettyJson: { enabled: false }}`        |
 
 **Returns:** void
 
@@ -114,12 +137,13 @@ factory(undefined, 'test');
 
 The config class is a set of wrappers and helpers providing access to configuration and file synchronization.
 
-#### `new Config(file: string, data: Storable): Config`
+#### `new Config(file: string, data: Storable, options?: ConfigOptions): Config`
 **Parameters:**
-| Name   | Type       |
-| ------ | ---------- |
-| `file` | [string]   |
-| `data` | [Storable] |
+| Name       | Type            |
+| ---------- | --------------- |
+| `file`     | [string]        |
+| `data`     | [Storable]      |
+| `options?` | [ConfigOptions] |
 
 **Returns:** [Config]
 
@@ -214,6 +238,7 @@ If `key` is provided, returns an array containing all sub keys in the key object
 
 
 [Key]: #key
+[ConfigOptions]: #configOptions
 [Storable]: #storable
 [Config]: #config
 [string]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
