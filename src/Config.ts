@@ -20,6 +20,12 @@ function sync(
     return descriptor;
 }
 
+/**
+ * Options that can be passed to Config for writing and storing data
+ * 
+ * Currently supports pretty JSON format for storing indented, 
+ * multi-line in file
+ */
 export type ConfigOptions = {
     prettyJson?: {
         enabled: boolean;
@@ -27,6 +33,9 @@ export type ConfigOptions = {
     };
 };
 
+/**
+ * Default config, used for optional `options` args throughout
+ */
 export const DEFAULT_CONFIG = { 
     prettyJson: {
         enabled: false,
