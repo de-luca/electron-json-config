@@ -3,7 +3,7 @@ version: '2.2'
 services:
 
   npm:
-    image: deluca/electron:latest
+    image: node:latest
     init: true
     volumes:
       - ./:/scripts:rw

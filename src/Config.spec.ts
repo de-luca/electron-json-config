@@ -3,7 +3,7 @@ import { app } from 'electron';
 import { expect } from 'chai';
 import { join } from 'path';
 import { unlinkSync, readFileSync } from 'fs';
-import Config, { DEFAULT_CONFIG } from './Config';
+import Config from './Config';
 
 const tmpFile = join(app.getPath('temp'), 'test.json');
 
