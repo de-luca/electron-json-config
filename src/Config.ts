@@ -12,13 +12,39 @@ function sync(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     descriptor.value = function (this: any, ...args: Array<any>): any {
         const res = originalMethod.apply(this, args);
-        util.sync(this._file, this._data);
+        util.sync(this._file, this._data, this._options.prettyJson);
 
         return res;
     };
 
     return descriptor;
 }
+
+/**
+ * Type to support configuration of pretty JSON when writing JSON file
+ */
+export type PrettyJSONConfig = {
+  enabled: boolean;
+  indentSize?: number;
+};
+
+/**
+ * Options that can be passed to Config for writing and storing data
+ * 
+ * Currently supports pretty JSON format for storing indented, 
+ * multi-line in file
+ */
+export type ConfigOptions = {
+   prettyJson?: PrettyJSONConfig;
+};
+/**
+ * Default config, used for optional `options` args throughout
+ */
+export const DEFAULT_CONFIG = { 
+    prettyJson: {
+        enabled: false,
+    },
+};
 
 /**
  * A Key can be:
@@ -31,10 +57,16 @@ export type Key = string | Array<string>;
 export default class Config {
     private _file: string;
     private _data: Storable;
+    private _options: ConfigOptions;
 
-    public constructor(file: string, data: Storable) {
+    public constructor(
+        file: string, 
+        data: Storable, 
+        options: ConfigOptions = DEFAULT_CONFIG,
+    ) {
         this._file = file;
         this._data = data;
+        this._options = options;
     }
 
     public get file(): string {

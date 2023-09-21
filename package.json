@@ -29,7 +29,8 @@
     "test": "electron-mocha -r ts-node/register '**/*.spec.ts'",
     "test:coverage": "nyc npm run test",
     "test:docker": "xvfb-run --server-args=\"-screen 0 1024x780x24\" npm run test",
-    "build": "tsc"
+    "build": "tsc",
+    "prepare": "npm run build"
   },
   "license": "BSD-2-Clause",
   "devDependencies": {

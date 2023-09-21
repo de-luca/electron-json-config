@@ -3,7 +3,7 @@ import { app } from 'electron';
 import { expect } from 'chai';
 import { join } from 'path';
 import { unlinkSync, readFileSync } from 'fs';
-import Config from './Config';
+import Config, { DEFAULT_CONFIG } from './Config';
 
 const tmpFile = join(app.getPath('temp'), 'test.json');
 
@@ -48,6 +48,26 @@ describe('Config.set', () => {
     });
 });
 
+describe('Config.set (with pretty JSON)', () => {
+  const config = new Config(tmpFile, {}, { prettyJson: { enabled: true }});
+
+  it('adds a value under a top level key', () => {
+      config.set('foo', 'bar');
+      expect((config as any)._data?.foo).to.equals('bar');
+  });
+
+  it('adds a value under a nested key', () => {
+      config.set('the.answer', 42);
+      expect((config as any)._data?.the?.answer).to.equals(42);
+  });
+
+  it('syncs the file on call', () => {
+      config.set('isSynced', 'sure');
+      const content = readFileSync(tmpFile).toString();
+      expect(content).to.equals(JSON.stringify((config as any)._data, null, 2));
+  });
+});
+
 describe('Config.setBulk', () => {
     const config = new Config(tmpFile, {});
 
@@ -65,6 +85,25 @@ describe('Config.setBulk', () => {
         const content = readFileSync(tmpFile).toString();
         expect(content).to.equals(JSON.stringify((config as any)._data));
     });
+});
+
+describe('Config.setBulk (with pretty JSON)', () => {
+  const config = new Config(tmpFile, {}, { prettyJson: { enabled: true }});
+
+  it('adds multiple values in a single call', () => {
+      config.setBulk({
+          'foo': 'bar',
+          'the.answer': 42,
+      });
+      expect((config as any)._data?.foo).to.equals('bar');
+      expect((config as any)._data?.the?.answer).to.equals(42);
+  });
+
+  it('syncs the file on call', () => {
+      config.set('isSynced', 'sure');
+      const content = readFileSync(tmpFile).toString();
+      expect(content).to.equals(JSON.stringify((config as any)._data, null, 2));
+  });
 });
 
 describe('Config.get', () => {

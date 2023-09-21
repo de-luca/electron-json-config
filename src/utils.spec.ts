@@ -28,6 +28,8 @@ function unlinkTmpFiles() {
 }
 
 describe('utils.sync', () => {
+    afterEach(unlinkTmpFiles);
+
     it('updates the file with given object', () => {
         const path = join(tmpDir, 'iexist');
         const data: Storable = {
@@ -39,6 +41,35 @@ describe('utils.sync', () => {
 
         const content = readFileSync(path).toString();
         expect(content).to.equals(JSON.stringify(data));
+    });
+    it('updates the file with given object - pretty JSON (indent default)', () => {
+        const path = join(tmpDir, 'iexist');
+        const data: Storable = {
+          first: 'level',
+          deep: { nested: 'value' },
+        };
+    
+        const defaultIndent = 2;
+    
+        utils.sync(path, data, { enabled: true });
+    
+        const content = readFileSync(path).toString();
+        expect(content).to.equals(JSON.stringify(data, null, defaultIndent));
+    });
+  
+    it('updates the file with given object - pretty JSON (indent 4)', () => {
+        const path = join(tmpDir, 'iexist');
+        const data: Storable = {
+          first: 'level',
+          deep: { nested: 'value' },
+        };
+    
+        const indent = 4;
+    
+        utils.sync(path, data, { enabled: true, indentSize: indent });
+    
+        const content = readFileSync(path).toString();
+        expect(content).to.equals(JSON.stringify(data, null, indent));
     });
 });
 
