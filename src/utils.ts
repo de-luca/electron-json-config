@@ -1,12 +1,12 @@
-import { readFileSync, writeFileSync } from "fs";
-import { Buffer } from "buffer";
-import Storable from "./Storable";
-import { DEFAULT_CONFIG, Key, PrettyJSONConfig } from "./Config";
+import { readFileSync, writeFileSync } from 'fs';
+import { Buffer } from 'buffer';
+import Storable from './Storable';
+import { DEFAULT_CONFIG, Key, PrettyJSONConfig } from './Config';
 
 export function sync(
   file: string,
   data: Record<string, unknown>,
-  options: PrettyJSONConfig = DEFAULT_CONFIG["prettyJson"],
+  options: PrettyJSONConfig = DEFAULT_CONFIG['prettyJson'],
 ): void {
   if (options.enabled) {
     writeFileSync(file, JSON.stringify(data, null, options.indentSize || 2));
@@ -24,9 +24,9 @@ export function read(file: string): Storable {
   } catch (err) {
     if (
       err instanceof Error &&
-      (err as NodeJS.ErrnoException).code === "ENOENT"
+      (err as NodeJS.ErrnoException).code === 'ENOENT'
     ) {
-      writeFileSync(file, "{}");
+      writeFileSync(file, '{}');
       return {};
     }
     throw err;
@@ -38,7 +38,7 @@ export function pathiffy(key: Key): Array<string> {
     return key;
   }
 
-  return key.split(".");
+  return key.split('.');
 }
 
 export function search<T>(data: Storable, key: Key): T | undefined {
