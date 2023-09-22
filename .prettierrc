@@ -2,5 +2,6 @@
   "bracketSameLine": false,
   "bracketSpacing": true,
   "singleQuote": true,
-  "semi": true
+  "semi": true,
+  "editorconfig": true
 }
