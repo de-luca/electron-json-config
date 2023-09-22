@@ -82,7 +82,7 @@
     "cache": true
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,ts,tsx,json,css,scss,md}": [
+    "src/*.ts": [
       "prettier --write",
       "npm run lint"
     ]
