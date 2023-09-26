@@ -1,13 +1,13 @@
 {
-    "parser": "@typescript-eslint/parser",
-    "extends": [
-        "plugin:@typescript-eslint/recommended"
-    ],
-    "parserOptions": {
-        "ecmaVersion": 2018,
-        "sourceType": "module"
-    },
-    "rules": {
-        "comma-dangle": ["error", "always-multiline"]
-    }
+  "parser": "@typescript-eslint/parser",
+  "extends": ["plugin:@typescript-eslint/recommended"],
+  "parserOptions": {
+    "ecmaVersion": 2018,
+    "sourceType": "module"
+  },
+  "rules": {
+    "comma-dangle": ["error", "always-multiline"],
+    "indent": ["error", 2],
+    "quotes": ["error", "single"]
+  }
 }
