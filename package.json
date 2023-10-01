@@ -1,6 +1,6 @@
 {
   "name": "electron-json-config",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Simply set and get configuration from a json file for your Electron app",
   "main": "lib/index.js",
   "keywords": [
