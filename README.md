@@ -1,3 +1,5 @@
+⚠️ This repository is no longer updated. Use at your own risk.
+
 # electron-json-config
 
 [![npm](https://img.shields.io/npm/v/electron-json-config)](https://www.npmjs.com/package/electron-json-config)
